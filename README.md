@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Content Studio
 
-## Getting Started
+A modern **AI-powered content generation platform** built with Next.js 15 (App Router), Tailwind CSS, TypeScript, and integrated AI capabilities. Create blog posts, social media content, emails, product descriptions and more using advanced AI prompts and templates.
 
-First, run the development server:
+![AI Content Studio Dashboard Preview](https://via.placeholder.com/1280x720.png?text=AI+Content+Studio+Dashboard+Screenshot)
+_(Replace with actual screenshot later – recommended size: 1280×720)_
+
+## ✨ Features
+
+- **AI Content Generation** using templates and custom prompts
+- **Dark/Light Mode** support with smooth transitions
+- **Responsive UI** (mobile-first design)
+- **User Authentication** (Google Sign-In + Email/Password – ready to integrate)
+- **Dashboard** with stats: total projects, words generated, templates, etc.
+- **Template Management** (create, edit, categorize)
+- **Chat Assistant** (floating AI helper)
+- **Preview Mode** for generated content
+- **Modern Stack**: Next.js App Router, Tailwind CSS, lucide-react icons, shadcn/ui components (if used)
+
+## Tech Stack
+
+- **Framework**: Next.js 15+ (App Router, Server Components + Client Components)
+- **Styling**: Tailwind CSS + PostCSS
+- **UI Components**: shadcn/ui (or Radix UI primitives)
+- **Icons**: lucide-react
+- **State Management**: React hooks (useState, useEffect, etc.)
+- **Authentication**: Ready for Clerk / NextAuth.js / Supabase Auth
+- **Database**: Ready for Drizzle ORM / Prisma + PostgreSQL (Neon / Supabase)
+- **AI Integration**: Google Gemini / OpenAI / Grok (configurable)
+- **Deployment**: Vercel (recommended)
+
+## Demo
+
+Live Demo: [https://your-app-name.vercel.app](https://your-app-name.vercel.app)  
+_(Update this link after first Vercel deployment)_
+
+## Quick Start
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/1366javad/ai-content-studio.git
+cd ai-content-studio
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
