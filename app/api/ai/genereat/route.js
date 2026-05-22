@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req) {
   const body = await req.json();
 
   const { title, language, tone, instructions, prompt } = body || {};
@@ -21,7 +21,6 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ content });
 }
-
 
 // 1. check user
 //2. check usage limit
