@@ -1,8 +1,8 @@
-import { DM_Sans } from "@next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import { ThemeProvider } from "./_components/ThemeProvider";
-import { ThemeContextProvider } from "./_components/ThemeContext";
+import { ThemeProvider } from "./lib/context/ThemeProvider";
+import { ThemeContextProvider } from "./lib/context/ThemeContext";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -16,7 +16,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body className={dmSans.className}>
         <ThemeProvider>
           <Providers>
