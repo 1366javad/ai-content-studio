@@ -15,6 +15,7 @@ import {
   SettingsIcon,
   UserIcon,
 } from "lucide-react";
+import { signOutAction } from "@/app/actions/auth";
 
 export default function UserMenu({ initials }) {
   const router = useRouter();

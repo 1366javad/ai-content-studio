@@ -2,6 +2,7 @@
 
 import { createClient } from "@/app/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 // 1. sign in with google
 export async function signInWithGoogle() {
@@ -92,5 +93,7 @@ export async function signOutAction() {
   const supabase = await createClient();
   await supabase.auth.signOut();
 
-  return { success: true };
+  revalidatePath("/", "layout");
+
+  redirect("/");
 }

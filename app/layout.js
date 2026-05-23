@@ -1,13 +1,13 @@
-// import { DM_Sans } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { ThemeProvider } from "./lib/context/ThemeProvider";
 import { ThemeContextProvider } from "./lib/context/ThemeContext";
 
-// const dmSans = DM_Sans({
-//   subsets: ["latin"],
-//   display: "swap",
-// });
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata = {
   title: "AI Content Studio",
@@ -17,7 +17,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={dmSans.className}>
         <ThemeProvider>
           <Providers>
             <ThemeContextProvider>{children}</ThemeContextProvider>
