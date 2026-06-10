@@ -1,44 +1,151 @@
-# AI Content Studio
+# AI Marketing OS
 
-A modern **AI-powered content generation platform** built with Next.js 15 (App Router), Tailwind CSS, TypeScript, and integrated AI capabilities. Create blog posts, social media content, emails, product descriptions and more using advanced AI prompts and templates.
+AI Marketing OS is an AI-powered marketing command center designed to help businesses plan, research, create, optimize, and manage marketing campaigns from a single workspace.
 
-![AI Content Studio Dashboard Preview](https://via.placeholder.com/1280x720.png?text=AI+Content+Studio+Dashboard+Screenshot)
-_(Replace with actual screenshot later – recommended size: 1280×720)_
+Built with Next.js, Supabase, and modern AI models, the platform combines campaign management, market research, SEO planning, content generation, creative production, video workflows, advertising assets, and analytics into one unified operating system.
 
-## ✨ Features
+---
 
-- **AI Content Generation** using templates and custom prompts
-- **Dark/Light Mode** support with smooth transitions
-- **Responsive UI** (mobile-first design)
-- **User Authentication** (Google Sign-In + Email/Password – ready to integrate)
-- **Dashboard** with stats: total projects, words generated, templates, etc.
-- **Template Management** (create, edit, categorize)
-- **Chat Assistant** (floating AI helper)
-- **Preview Mode** for generated content
-- **Modern Stack**: Next.js App Router, Tailwind CSS, lucide-react icons, shadcn/ui components (if used)
+## Features
 
-## Tech Stack
+### Campaign Workspace
 
-- **Framework**: Next.js 15+ (App Router, Server Components + Client Components)
-- **Styling**: Tailwind CSS + PostCSS
-- **UI Components**: shadcn/ui (or Radix UI primitives)
-- **Icons**: lucide-react
-- **State Management**: React hooks (useState, useEffect, etc.)
-- **Authentication**: Ready for Clerk / NextAuth.js / Supabase Auth
-- **Database**: Ready for Drizzle ORM / Prisma + PostgreSQL (Neon / Supabase)
-- **AI Integration**: Google Gemini / OpenAI / Grok (configurable)
-- **Deployment**: Vercel (recommended)
+- Create and manage marketing campaigns
+- Campaign-centric workflow
+- Centralized marketing command center
+- Multi-channel campaign organization
 
-## Demo
+### Research
 
-Live Demo: [https://your-app-name.vercel.app](https://your-app-name.vercel.app)  
-_(Update this link after first Vercel deployment)_
+- Market Research
+- Competitor Analysis
+- Audience Analysis
+- Trend Analysis
+- Customer Pain Points
+- Opportunity Discovery
 
-## Quick Start
+### SEO
 
-### 1. Clone the repository
+- Keyword Research
+- Keyword Clustering
+- Topic Clusters
+- SEO Strategy Generation
+- Meta Descriptions
+- FAQ Generation
 
-```bash
-git clone https://github.com/1366javad/ai-content-studio.git
-cd ai-content-studio
-```
+### Content
+
+- Blog Posts
+- Email Campaigns
+- Newsletters
+- Landing Pages
+- Case Studies
+- LinkedIn Content
+- Instagram Content
+
+### Creative
+
+- Blog Covers
+- Social Media Assets
+- Ad Creatives
+- Product Mockups
+- Marketing Banners
+
+### Video
+
+- Reels
+- TikTok Scripts
+- YouTube Shorts
+- Storyboards
+- Video Scripts
+
+### Ads
+
+- Google Ads
+- Meta Ads
+- LinkedIn Ads
+- TikTok Ads
+
+### Asset Library
+
+- Documents
+- Images
+- Videos
+- Exports
+- Campaign Assets
+
+---
+
+## Technology Stack
+
+### Frontend
+
+- Next.js 15 (App Router)
+- React
+- Tailwind CSS
+- Lucide Icons
+
+### Backend
+
+- Supabase
+- PostgreSQL
+- Row Level Security (RLS)
+
+### AI
+
+- OpenRouter
+- Gemini
+- OpenAI Compatible Models
+
+### Deployment
+
+- Netlify
+
+---
+
+## Project Structure
+
+app/
+
+- dashboard/
+- campaigns/
+- research/
+- seo/
+- content/
+- creative/
+- video/
+- ads/
+- analytics/
+- settings/
+- api/
+
+components/
+
+- campaign/
+- campaigns/
+- dashboard/
+- layout/
+- ui/
+
+lib/
+
+- db/
+- supabase/
+- ai/
+
+---
+
+## Vision
+
+AI Marketing OS is designed to become a complete AI-powered marketing operating system where users can:
+
+1. Create campaigns
+2. Research markets
+3. Build SEO strategies
+4. Generate content
+5. Produce creatives
+6. Create ad assets
+7. Manage campaign resources
+8. Analyze performance
+
+All from a single unified campaign workspace.

@@ -44,20 +44,21 @@ function NavbarClient({ user, profile }) {
         !isDark && " border-slate-800/60 ",
       )}
     >
-      <div className="max-w-8xl mx-auto px-6 py-4">
+      <div className="max-w-8xl mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
           <Logo />
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-12">
             {navLink.map((link) => (
-              <button
+              <Link
                 key={link.name}
-                onClick={() => handleProtectedLink(link.href)}
+                href={link.href}
+                // onClick={() => handleProtectedLink(link.href)}
                 className="text-sm md:text-base font-medium hover:text-[#3B3CFF] transition-colors"
               >
                 {link.name}
-              </button>
+              </Link>
             ))}
           </div>
 
@@ -117,7 +118,7 @@ function NavbarClient({ user, profile }) {
                 key={link.name}
                 onClick={() => {
                   setMenuOpen(false);
-                  handleProtectedLink(link.href);
+                  // handleProtectedLink(link.href);
                 }}
                 className={cn(
                   "text-lg font-medium hover:text-[#3B3CFF] transition-colors transform opacity-0 translate-x-",
@@ -132,7 +133,7 @@ function NavbarClient({ user, profile }) {
 
           <div className="flex flex-row justify-end mt-4 gap-4 ">
             {user ? (
-              <Profile email={user.email} />
+              <Profile />
             ) : (
               <>
                 <Link href="/login">

@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useTransition } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 import { signInWithGoogle, signUpWithEmail } from "@/app/actions/auth";
 
@@ -19,6 +21,47 @@ import ThemeToggle from "../layout/ThemeToggle";
 function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const { toast } = useToast();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+
+    if (password !== confirmPassword) {
+      toast({
+        variant: "destructive",
+        title: "Password mismatch",
+        description: "Password and Confirm Password must match.",
+      });
+
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await signUpWithEmail(formData);
+
+      if (result?.error) {
+        toast({
+          variant: "destructive",
+          title: "Registration failed",
+          description: result.error,
+        });
+
+        return;
+      }
+
+      toast({
+        title: "Account created",
+        description: "Please check your email inbox to verify your account.",
+      });
+    });
+  };
 
   return (
     <div
@@ -86,7 +129,7 @@ function SignUpForm() {
       </div>
 
       {/* Form Fields */}
-      <form action={signUpWithEmail} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Full Name */}
         <div>
           <label className="block text-sm font-medium mb-1.5 text-slate-700 dark:text-slate-300">
@@ -96,8 +139,10 @@ function SignUpForm() {
             <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
+              name="fullName"
               placeholder="Jane Smith"
               required
+              disabled={isPending}
               className={`
                     w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all duration-200
                     bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400
@@ -118,8 +163,10 @@ function SignUpForm() {
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
               type="email"
+              name="email"
               placeholder="you@example.com"
               required
+              disabled={isPending}
               className={`
                     w-full pl-10 pr-4 py-3 rounded-xl border text-sm outline-none transition-all duration-200
                     bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400
@@ -140,8 +187,10 @@ function SignUpForm() {
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
               type={showPassword ? "text" : "password"}
+              name="password"
               placeholder="••••••••"
               required
+              disabled={isPending}
               className={`
                     w-full pl-10 pr-11 py-3 rounded-xl border text-sm outline-none transition-all duration-200
                     bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400
@@ -173,8 +222,10 @@ function SignUpForm() {
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
               type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
               placeholder="••••••••"
               required
+              disabled={isPending}
               className={`
                     w-full pl-10 pr-11 py-3 rounded-xl border text-sm outline-none transition-all duration-200
                     bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400
@@ -200,6 +251,7 @@ function SignUpForm() {
         {/* Submit Button */}
         <button
           type="submit"
+          disabled={isPending}
           className={`
                 group w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#3B3CFF] to-[#5B5CFF]
                 text-white font-semibold text-sm mt-1
@@ -208,7 +260,7 @@ function SignUpForm() {
                 dark:from-indigo-600 dark:to-indigo-500
               `}
         >
-          Create Account
+          {isPending ? "Creating Account..." : "Create Account"}
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </form>

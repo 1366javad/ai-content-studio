@@ -5,7 +5,7 @@ import { useUser } from "@/hooks/useUser";
 function Profile() {
   const { profile, loading } = useUser();
 
-  if (loading) return <p>user</p>;
+  if (loading) return <p>User</p>;
   const fullName = profile?.full_name;
 
   const initials = fullName ? fullName.charAt(0).toUpperCase() : "U";

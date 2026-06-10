@@ -8,12 +8,12 @@ function FAQSection() {
 
           <div className="relative z-10">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Ready to Create Amazing Content?
+              Ready to transform your marketing?
             </h2>
 
             <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of creators and start generating professional
-              content in seconds.
+              Join the teams already using Marketing OS to research, create, and
+              launch campaigns 10x faster.
             </p>
 
             <button className="group px-8 py-4 rounded-xl bg-white text-[#3B3CFF] font-semibold text-lg hover:shadow-2xl hover:shadow-white/20 transition-all duration-200 hover:scale-105 inline-flex items-center gap-2">

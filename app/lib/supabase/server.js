@@ -6,21 +6,21 @@ export async function createClient() {
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
+
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+
     {
       cookies: {
-        async getAll() {
-          const all = await cookieStore.getAll?.();
-          return all ?? [];
+        getAll() {
+          return cookieStore.getAll();
         },
-        async setAll(cookiesToSet) {
+
+        setAll(cookiesToSet) {
           try {
-            for (const { name, value, options } of cookiesToSet) {
-              await cookieStore.set(name, value, options);
-            }
-          } catch {
-            // برای رندر Server Component لازم است
-          }
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch {}
         },
       },
     },

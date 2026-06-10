@@ -1,15 +1,50 @@
 "use client";
 
+import { useToast } from "@/hooks/use-toast";
 import { X, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 function CreateTemplateModal({ setOpenModal }) {
+  const { toast } = useToast();
   const [templateName, setTemplateName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Blog Post");
   const [tone, setTone] = useState("Professional");
   const [promptTemplate, setPromptTemplate] = useState("");
   const [instructions, setInstructions] = useState("");
+
+  async function handleCreateTemplate() {
+    const response = await fetch("/api/tempalates", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: templateName,
+        description,
+        category,
+        tone,
+        prompt: promptTemplate,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast({
+        title: "Template created",
+        description: "Your Template has been created successfully.",
+      });
+      setOpenModal(false);
+      window.location.reload();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Save Failed",
+        description: data.error || "Failed to created Template.",
+      });
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -189,6 +224,7 @@ function CreateTemplateModal({ setOpenModal }) {
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <button
+              onClick={handleCreateTemplate}
               className={`
               rounded-xl font-medium transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
@@ -200,6 +236,7 @@ function CreateTemplateModal({ setOpenModal }) {
               Create Template
             </button>
             <button
+              onClick={() => setOpenModal(false)}
               className={`
               rounded-xl font-medium transition-all duration-200
               focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2

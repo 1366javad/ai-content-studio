@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { signInWithEmail, signInWithGoogle } from "@/app/actions/auth";
 import {
   Moon,
@@ -10,11 +10,32 @@ import {
   EyeOff,
   ArrowRight,
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 import Link from "next/link";
 import ThemeToggle from "../layout/ThemeToggle";
 function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    startTransition(async () => {
+      const result = await signInWithEmail(formData);
+
+      if (result?.error) {
+        toast({
+          variant: "destructive",
+          title: "Sign in failed",
+          description: result.error,
+        });
+      }
+    });
+  }
 
   return (
     <div
@@ -86,7 +107,7 @@ function SignInForm() {
       </div>
 
       {/* Form Fields */}
-      <form action={signInWithEmail} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <div>
           <label className="block text-sm font-medium mb-1.5 text-slate-700 dark:text-slate-300">
@@ -96,6 +117,8 @@ function SignInForm() {
             <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
               type="email"
+              name="email"
+              disabled={isPending}
               placeholder="you@example.com"
               required
               className={`
@@ -126,9 +149,11 @@ function SignInForm() {
           <div className="relative">
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
             <input
+              name="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               required
+              disabled={isPending}
               className={`
                     w-full pl-10 pr-11 py-3 rounded-xl border text-sm outline-none transition-all duration-200
                     bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400
@@ -139,6 +164,7 @@ function SignInForm() {
             />
             <button
               type="button"
+              disabled={isPending}
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
             >
@@ -154,6 +180,7 @@ function SignInForm() {
         {/* Submit Button */}
         <button
           type="submit"
+          disabled={isPending}
           className={`
                 group w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#3B3CFF] to-[#5B5CFF]
                 text-white font-semibold text-sm mt-2
@@ -162,7 +189,7 @@ function SignInForm() {
                 dark:from-indigo-600 dark:to-indigo-500
               `}
         >
-          Sign In
+          {isPending ? "Signing in..." : "Sign In"}
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </form>

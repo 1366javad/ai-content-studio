@@ -1,52 +1,46 @@
 "use client";
-import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function DropdownMenuRadioGroupDemo() {
-  const [position, setPosition] = useState("bottom");
+export function DropdownMenuRadioGroupDemo({
+  isEditing = false,
+  onSaveQuickAction,
 
+  onCancel,
+  disabled = false,
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="mt-4 ml-4 text-base font-medium w-36  bg-primary-500 py-4"
+          disabled={disabled}
+          className="mt-4 ml-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white py-3 disabled:opacity-50 cursor-pointer"
         >
-          Choos One
+          {isEditing ? "Update Content" : "Save Content"}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-36 md:w-52">
-        <DropdownMenuGroup className=" text-nowrap">
-          <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-            <DropdownMenuRadioItem
-              value="save project"
-              className="font-semibold dark:hover:bg-slate-800 hover:bg-slate-200"
-            >
-              Save as new project
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem
-              value="save existing"
-              className="font-semibold dark:hover:bg-slate-800 hover:bg-slate-200"
-            >
-              Save to existing project
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem
-              value="cancel"
-              className="font-semibold dark:hover:bg-slate-800 hover:bg-slate-200"
-            >
-              Cancel
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
+
+      <DropdownMenuContent className="w-52 backdrop-blur-xl border-dark-border">
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={onSaveQuickAction}
+          >
+            {isEditing ? "Update Quick Action" : "Save as Quick Action"}
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer" onClick={onCancel}>
+            Cancel
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

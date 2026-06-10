@@ -95,3 +95,62 @@
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
+
+/* Custom Scrollbar - Dark & Light Mode */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #64748b #1e2937;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #1e2937; /* Dark Mode - Track */
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #64748b; /* Dark Mode - Thumb */
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ==================== Light Mode ==================== */
+@media (prefers-color-scheme: light) {
+  .custom-scrollbar {
+    scrollbar-color: #94a3b8 #f1f5f9;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9; /* Light - Track */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #94a3b8; /* Light - Thumb */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: #64748b #1b395f;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #1e2937;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #64748b;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
