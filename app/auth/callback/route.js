@@ -10,11 +10,18 @@ export async function GET(request) {
     const supabase = await createClient();
 
     const { error } = await supabase.auth.exchangeCodeForSession(code);
+    console.log("CALLBACK ERROR:", error);
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    console.log("SESSION:", !!session);
 
     if (!error) {
-      return NextResponse.redirect(`${origin}/dashboard`);
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 
-  return NextResponse.redirect(`${origin}/signin`);
+  return NextResponse.redirect(new URL("/signin", request.url));
 }
