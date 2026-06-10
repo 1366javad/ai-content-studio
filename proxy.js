@@ -37,6 +37,7 @@ export async function proxy(request) {
   const {
     data: { session },
   } = await supabase.auth.getSession();
+  console.log("PROXY SESSION:", !!session);
 
   const protectedRoutes = ["/dashboard"];
 
