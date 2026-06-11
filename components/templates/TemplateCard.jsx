@@ -43,7 +43,7 @@ const categoryColors = {
   LinkedIn: "from-sky-500/10 to-sky-600/10 text-sky-500",
 };
 
-export default function TemplateCard({ template }) {
+export default function TemplateCard({ template, campaigns }) {
   const [openModal, setOpenModal] = useState(false);
 
   const Icon = getTemplateIcon(template.icon, template.category);
@@ -57,6 +57,7 @@ export default function TemplateCard({ template }) {
       {openModal && (
         <UseTemplateModal
           template={template}
+          campaigns={campaigns}
           onClose={() => setOpenModal(false)}
         />
       )}

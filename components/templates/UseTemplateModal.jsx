@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function UseTemplateModal({ template, onClose }) {
+export default function UseTemplateModal({ template, onClose, campaigns }) {
   const router = useRouter();
 
   const [projects, setProjects] = useState([]);
-  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedCampaignsId, setSelectedCampaignsId] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,13 +35,17 @@ export default function UseTemplateModal({ template, onClose }) {
     };
   }, []);
 
-  function handleContinue() {
-    if (!selectedProject) return;
+  const handleContinue = () => {
+    const campaign = campaigns.find((c) => c.id === selectedCampaignsId);
+    if (!campaign) return;
 
-    router.push(
-      `/dashboard/projects/${selectedProject}?template=${template.id}`,
-    );
-  }
+    // دقیقاً مثل CampaignPicker
+    const url = `/dashboard/campaings/${campaign.id}?tab=content`;
+    // اگر tab خاص می‌خوای، prop اضافه کن: tab="research" و اینجا استفاده کن
+
+    router.push(url);
+    onClose(); // بستن مودال بعد از رفتن
+  };
 
   if (loading) {
     return (
@@ -60,31 +64,31 @@ export default function UseTemplateModal({ template, onClose }) {
           Use Template
         </h2>
 
-        {projects.length === 0 ? (
+        {campaigns.length === 0 ? (
           <div className="space-y-4">
             <p className="text-gray-600 dark:text-gray-300">
-              No projects found.
+              No campaign found.
             </p>
 
             <button
-              onClick={() => router.push("/dashboard/projects")}
+              onClick={() => router.push("/dashboard/campaings")}
               className="px-4 py-2 bg-indigo-600 text-white rounded-xl"
             >
-              Create Project First
+              Create Campaign First
             </button>
           </div>
         ) : (
           <>
             <select
-              value={selectedProject}
-              onChange={(e) => setSelectedProject(e.target.value)}
+              value={selectedCampaignsId}
+              onChange={(e) => setSelectedCampaignsId(e.target.value)}
               className="w-full border rounded-xl p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             >
-              <option value="">Select Project</option>
+              <option value="">Select Campaigns</option>
 
-              {projects.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.title}
+              {campaigns.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
                 </option>
               ))}
             </select>
@@ -98,7 +102,7 @@ export default function UseTemplateModal({ template, onClose }) {
               </button>
 
               <button
-                disabled={!selectedProject}
+                disabled={!selectedCampaignsId}
                 onClick={handleContinue}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-xl disabled:opacity-50"
               >

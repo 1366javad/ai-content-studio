@@ -11,7 +11,10 @@ import Textarea from "@/components/ui/Texttarea";
 import { PlusCircle, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function Templates({ initialTemplates = [] }) {
+export default function Templates({
+  initialTemplates = [],
+  dashboardData = [],
+}) {
   const router = useRouter();
   const [templates, setTemplates] = useState(initialTemplates);
 
@@ -54,6 +57,8 @@ export default function Templates({ initialTemplates = [] }) {
     { value: "Creative", label: "Creative" },
     { value: "Academic", label: "Academic" },
   ];
+
+  const campaigns = dashboardData?.campaigns || [];
 
   const filteredTemplates = React.useMemo(() => {
     let filtered = [...templates];
@@ -171,6 +176,7 @@ export default function Templates({ initialTemplates = [] }) {
             {filteredTemplates.map((template) => (
               <TemplateCard
                 key={template.id}
+                campaigns={campaigns}
                 template={template}
                 onUse={handleUseTemplate}
                 onEdit={handleEditTemplate}

@@ -30,6 +30,8 @@ export default function CampaignPicker({
     router.push(url);
   };
 
+ 
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -59,6 +61,7 @@ export default function CampaignPicker({
               icon={FolderKanban}
               title="No campaigns yet"
               description="Create a campaign first"
+              variant="compact"
             />
           </div>
         ) : (
