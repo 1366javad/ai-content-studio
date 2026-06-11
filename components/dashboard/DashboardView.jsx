@@ -60,7 +60,7 @@ const quickActions = [
     label: "Create Campaign",
     emoji: "🚀",
     desc: "Start new campaign",
-    href: "/dashboard/campaigns",
+    href: "/dashboard/campaings",
     color: "from-[#3B3CFF]/10 to-[#3B3CFF]/5",
   },
   {
