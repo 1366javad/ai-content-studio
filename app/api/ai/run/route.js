@@ -1,4 +1,4 @@
-import { runWorkflowStream } from "@/app/lib/ai/orchestrator/runWorkflow";
+import { runWorkflowStream } from "@/app/lib/_legacy_ai/orchestrator/runWorkflow";
 import { createClient } from "@/app/lib/supabase/server";
 
 export const runtime = "nodejs";

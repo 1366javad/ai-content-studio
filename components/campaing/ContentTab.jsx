@@ -84,7 +84,44 @@ export default function ContentTab({ campaign, outputs = [] }) {
 
   const currentType = CONTENT_TYPES.find((t) => t.id === selectedType);
 
-  const generate = async () => {};
+  const generate = async () => {
+    try {
+      setIsGenerating(true);
+
+      const response = await fetch(
+        `/api/campaigns/${campaign.id}/content/generate`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            type: selectedType,
+
+            title: `${campaign.name} ${currentType?.label}`,
+
+            prompt,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Generation failed");
+      }
+
+      setContent(data.output.content);
+    } catch (error) {
+      console.error(error);
+
+      alert(error.message || "Generation failed");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(content);

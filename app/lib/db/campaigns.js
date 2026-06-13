@@ -33,3 +33,69 @@ export async function getCampaignById(campaignId) {
 
   return data;
 }
+
+export async function createCampaign({ userId, campaign }) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("campaigns")
+    .insert({
+      user_id: userId,
+
+      name: campaign.name,
+
+      product_name: campaign.product_name,
+
+      website: campaign.website,
+
+      industry: campaign.industry,
+
+      target_audience: campaign.target_audience,
+
+      goal: campaign.goal,
+
+      brand_description: campaign.brand_description,
+
+      notes: campaign.notes,
+
+      status: campaign.status || "draft",
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function updateCampaign({ campaignId, updates }) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("campaigns")
+    .update({
+      ...updates,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", campaignId)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+export async function deleteCampaign(campaignId) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("campaigns")
+    .delete()
+    .eq("id", campaignId);
+
+  if (error) throw error;
+
+  return {
+    success: true,
+  };
+}

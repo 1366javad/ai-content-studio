@@ -1,48 +1,73 @@
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/app/lib/supabase/server";
 
-const supabase = createClient();
+export async function createAiStep({
+  runId,
+  stepName,
+  agentName,
+  providerName,
+  input = {},
+}) {
+  const supabase = await createClient();
 
-export async function createAiStep(payload) {
   const { data, error } = await supabase
     .from("ai_steps")
-    .insert(payload)
+    .insert({
+      run_id: runId,
+
+      step_name: stepName,
+
+      agent_name: agentName,
+
+      provider_name: providerName,
+
+      status: "running",
+
+      input,
+
+      started_at: new Date().toISOString(),
+    })
     .select()
     .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data;
 }
 
-export async function updateAiStep(stepId, updates) {
+export async function completeAiStep({ stepId, output }) {
+  const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("ai_steps")
-    .update(updates)
+    .update({
+      status: "completed",
+      output,
+      completed_at: new Date().toISOString(),
+    })
     .eq("id", stepId)
     .select()
     .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data;
 }
 
-export async function getStepsByRun(runId) {
+export async function failAiStep({ stepId, errorMessage }) {
+  const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("ai_steps")
-    .select("*")
-    .eq("run_id", runId)
-    .order("created_at", {
-      ascending: true,
-    });
+    .update({
+      status: "failed",
+      error: errorMessage,
+      completed_at: new Date().toISOString(),
+    })
+    .eq("id", stepId)
+    .select()
+    .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
-  return data || [];
+  return data;
 }

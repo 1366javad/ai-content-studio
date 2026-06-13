@@ -1,22 +1,36 @@
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/app/lib/supabase/server";
 
-const supabase = createClient();
+export async function createAiRun({
+  userId,
+  campaignId,
+  workflow,
+  input = {},
+  model = null,
+}) {
+  const supabase = await createClient();
 
-export async function createAiRun(payload) {
   const { data, error } = await supabase
     .from("ai_runs")
-    .insert(payload)
+    .insert({
+      user_id: userId,
+      campaign_id: campaignId,
+      workflow,
+      status: "running",
+      current_step: "planner",
+      input,
+      model,
+    })
     .select()
     .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data;
 }
 
-export async function updateAiRun(runId, updates) {
+export async function updateAiRun({ runId, updates }) {
+  const supabase = await createClient();
+
   const { data, error } = await supabase
     .from("ai_runs")
     .update({
@@ -27,23 +41,29 @@ export async function updateAiRun(runId, updates) {
     .select()
     .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data;
 }
 
-export async function getAiRunById(runId) {
-  const { data, error } = await supabase
-    .from("ai_runs")
-    .select("*")
-    .eq("id", runId)
-    .single();
+export async function completeAiRun({ runId, output }) {
+  return updateAiRun({
+    runId,
+    updates: {
+      status: "completed",
+      output,
+      completed_at: new Date().toISOString(),
+    },
+  });
+}
 
-  if (error) {
-    throw error;
-  }
-
-  return data;
+export async function failAiRun({ runId, errorMessage }) {
+  return updateAiRun({
+    runId,
+    updates: {
+      status: "failed",
+      error: errorMessage,
+      completed_at: new Date().toISOString(),
+    },
+  });
 }
