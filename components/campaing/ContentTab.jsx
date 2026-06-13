@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "@/app/lib/utils/utils";
 import { useSearchParams } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import { useToast } from "@/hooks/use-toast";
 
 import {
   FileText,
@@ -70,6 +72,9 @@ const CONTENT_TYPES = [
 
 export default function ContentTab({ campaign, outputs = [] }) {
   const searchParams = useSearchParams();
+  const streamRef = useRef(null);
+  const { toast } = useToast();
+
   const initialType = searchParams.get("type") || "blog";
 
   const latestOutput = outputs?.[0];
@@ -82,11 +87,45 @@ export default function ContentTab({ campaign, outputs = [] }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) clearTimeout(streamRef.current);
+    };
+  }, []);
+
+  const streamText = (fullText) => {
+    const words = fullText.split(" ");
+    let i = 0;
+
+    setContent("");
+
+    const tick = () => {
+      if (i >= words.length) {
+        setIsGenerating(false);
+        return;
+      }
+
+      const chunk = words.slice(i, i + 3).join(" ");
+      i += 3;
+
+      setContent((prev) => (prev ? `${prev} ${chunk}` : chunk));
+
+      streamRef.current = setTimeout(tick, 35 + Math.random() * 40);
+    };
+
+    tick();
+  };
+
   const currentType = CONTENT_TYPES.find((t) => t.id === selectedType);
 
   const generate = async () => {
     try {
+      if (!prompt.trim()) return;
+
+      if (streamRef.current) clearTimeout(streamRef.current);
+
       setIsGenerating(true);
+      setContent("");
 
       const response = await fetch(
         `/api/campaigns/${campaign.id}/content/generate`,
@@ -113,11 +152,16 @@ export default function ContentTab({ campaign, outputs = [] }) {
         throw new Error(data.error || "Generation failed");
       }
 
-      setContent(data.output.content);
+      streamText(data.output.content);
     } catch (error) {
       console.error(error);
 
-      alert(error.message || "Generation failed");
+      toast({
+        variant: "destructive",
+        title: "Error in creating content",
+        description:
+          "There was a problem connecting to Model. Please try again.",
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -254,7 +298,7 @@ export default function ContentTab({ campaign, outputs = [] }) {
           ) : content ? (
             <div className="flex-1 overflow-y-auto">
               <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-                {content}
+                <ReactMarkdown>{content}</ReactMarkdown>
               </p>
             </div>
           ) : (
