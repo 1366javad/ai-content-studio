@@ -66,7 +66,7 @@ export default function Research({ campaigns }) {
         <div>
           <h2
             className="text-2xl font-bold tracking-tight
-              dark :text-white text-slate-900"
+              dark:text-white text-slate-900"
           >
             Research
           </h2>

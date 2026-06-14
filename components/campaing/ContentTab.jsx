@@ -105,12 +105,12 @@ export default function ContentTab({ campaign, outputs = [] }) {
         return;
       }
 
-      const chunk = words.slice(i, i + 3).join(" ");
-      i += 3;
+      const chunk = words.slice(i, i + 2).join(" ");
+      i += 2;
 
       setContent((prev) => (prev ? `${prev} ${chunk}` : chunk));
 
-      streamRef.current = setTimeout(tick, 35 + Math.random() * 40);
+      streamRef.current = setTimeout(tick, 90 + Math.random() * 80);
     };
 
     tick();
