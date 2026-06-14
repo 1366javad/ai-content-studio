@@ -62,6 +62,7 @@ export async function runFlux({
   prompt,
   model = "black-forest-labs/FLUX.1-schnell", // سریع و باکیفیت خوب
 }) {
+  console.log("HF_TOKEN exists:", !!process.env.HUGGINGFACE_API_KEY);
   if (!prompt || prompt.trim().length < 15) {
     throw new Error(
       "The prompt should be at least 15 characters long and be well-descriptive.",

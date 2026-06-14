@@ -16,9 +16,12 @@ export async function POST(request) {
       );
     }
 
-    const result = await runFlux({
-      prompt: userPrompt,
-    });
+    console.log(
+      "Starting Flux generation for prompt:",
+      userPrompt.substring(0, 50) + "...",
+    );
+
+    const result = await runFlux({ prompt: userPrompt });
 
     return NextResponse.json({
       success: true,
@@ -27,12 +30,24 @@ export async function POST(request) {
       provider: result.provider,
     });
   } catch (error) {
-    console.error("Creative Generate Error:", error.message);
+    console.error("🚨 Creative Generate FULL ERROR:", error.message);
+    console.error("Error Stack:", error.stack);
+
+    let errorMsg = error.message;
+
+    if (errorMsg.includes("HUGGINGFACE_API_KEY")) {
+      errorMsg = "HUGGINGFACE_API_KEY is not set in Netlify.";
+    } else if (
+      errorMsg.includes("fetch failed") ||
+      errorMsg.includes("Failed to fetch")
+    ) {
+      errorMsg = "Unable to connect to Hugging Face. Check API key.";
+    }
 
     return NextResponse.json(
       {
         success: false,
-        error: error.message,
+        error: errorMsg,
       },
       { status: 500 },
     );
