@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/app/lib/utils/utils";
 
 import GlassCard from "@/components/ui/GlassCard";
@@ -116,10 +116,20 @@ const sections = [
 
 export default function SEOTab({ seo, campaign }) {
   const hasSEO = !!seo;
+  const viewerRef = useRef(null);
   const [results, setResults] = useState({});
   const [loading, setLoading] = useState({});
   const [selectedSection, setSelectedSection] = useState(null);
   const [generatingAll, setGeneratingAll] = useState(false);
+
+  useEffect(() => {
+    if (!selectedSection) return;
+
+    viewerRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [selectedSection]);
 
   const generateSection = async (sectionId) => {
     setLoading((prev) => ({
@@ -306,36 +316,40 @@ export default function SEOTab({ seo, campaign }) {
       </div>
 
       {/* VIEWER */}
+      <div ref={viewerRef}>
+        <GlassCard className="p-6 min-h-[400px]">
+          {!activeContent ? (
+            <div className="h-full flex items-center justify-center text-sm text-gray-500">
+              Select a generated SEO section to view the report
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {activeTitle}
+                </h3>
 
-      <GlassCard className="p-6 min-h-[400px]">
-        {!activeContent ? (
-          <div className="h-full flex items-center justify-center text-sm text-gray-500">
-            Select a generated SEO section to view the report
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-semibold text-gray-900 dark:text-white">
-                {activeTitle}
-              </h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={copyContent}
+                    className="p-2 rounded-lg border"
+                  >
+                    <Copy className="w-4 h-4" />
+                  </button>
 
-              <div className="flex gap-2">
-                <button onClick={copyContent} className="p-2 rounded-lg border">
-                  <Copy className="w-4 h-4" />
-                </button>
-
-                <button onClick={exportTxt} className="p-2 rounded-lg border">
-                  <Download className="w-4 h-4" />
-                </button>
+                  <button onClick={exportTxt} className="p-2 rounded-lg border">
+                    <Download className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="prose dark:prose-invert max-w-none">
-              <ReactMarkdown>{activeContent}</ReactMarkdown>
-            </div>
-          </>
-        )}
-      </GlassCard>
+              <div className="prose dark:prose-invert max-w-none">
+                <ReactMarkdown>{activeContent}</ReactMarkdown>
+              </div>
+            </>
+          )}
+        </GlassCard>
+      </div>
     </div>
   );
 }

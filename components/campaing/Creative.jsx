@@ -105,18 +105,21 @@ export default function Creative({ creativeTypes = [] }) {
     }));
 
     try {
-      const response = await fetch("/api/creative/generate", {
-        method: "POST",
+      const response = await fetch(
+        `/api/campaigns/${campaign.id}/creative/generate`,
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            type: sectionId,
+            prompt: section?.prompt || "",
+          }),
         },
-
-        body: JSON.stringify({
-          type: sectionId,
-          prompt: section?.prompt || "",
-        }),
-      });
+      );
 
       const data = await response.json();
 
