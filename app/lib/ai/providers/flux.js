@@ -1,5 +1,5 @@
 const apiKey = process.env.GEMINI_API_KEY;
-export async function runFlux({ prompt, model = "gemini-3.1-flash-image" }) {
+export async function runFlux({ prompt, model = "gemini-2.5-flash-image" }) {
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
@@ -17,6 +17,9 @@ export async function runFlux({ prompt, model = "gemini-3.1-flash-image" }) {
             ],
           },
         ],
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"],
+        },
       }),
     },
   );
