@@ -52,79 +52,70 @@
 //   };
 // }
 
-export async function runGeminiImage({
+const HF_TOKEN = process.env.HUGGINGFACE_API_KEY;
+
+if (!HF_TOKEN) {
+  throw new Error("HUGGINGFACE_API_KEY is missing in .env.local");
+}
+
+export async function runFlux({
   prompt,
-  model = "gemini-2.5-flash-image",
-  temperature = 0.85,
+  model = "black-forest-labs/FLUX.1-schnell", // سریع و باکیفیت خوب
 }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-
-  if (!apiKey) throw new Error("Missing GEMINI_API_KEY");
-
-  if (!prompt || typeof prompt !== "string" || prompt.trim().length < 5) {
+  if (!prompt || prompt.trim().length < 15) {
     throw new Error(
-      "The image prompt is required and must be at least 5 characters long.",
+      "The prompt should be at least 15 characters long and be well-descriptive.",
     );
   }
 
-  console.log("Generating image with model:", model);
-  console.log("Prompt length:", prompt.length);
+  console.log("Generating with Flux model:", model);
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    `https://api-inference.huggingface.co/models/${model}`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${HF_TOKEN}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        contents: [
-          {
-            role: "user",
-            parts: [{ text: prompt }],
-          },
-        ],
-        generationConfig: {
-          temperature,
-          responseModalities: ["TEXT", "IMAGE"],
+        inputs: prompt,
+        parameters: {
+          num_inference_steps: 28, // تعادل خوب سرعت و کیفیت
+          guidance_scale: 3.5,
+          height: 1024,
+          width: 1024,
+          // max_sequence_length: 512,
         },
       }),
     },
   );
 
   if (!response.ok) {
-    let errorMsg = await response.text();
-    try {
-      const err = JSON.parse(errorMsg);
-      errorMsg = err?.error?.message || errorMsg;
-    } catch {}
+    const errorText = await response.text();
+    console.error("HF Error:", errorText);
 
     if (response.status === 429) {
       throw new Error(
-        `❌Gemini quota is full. Please wait a moment.\n${errorMsg}`,
+        "Hugging Face stock is out. Please wait a moment and try again.",
       );
     }
-    throw new Error(`Gemini Image Error: ${errorMsg}`);
-  }
-
-  const data = await response.json();
-
-  const imagePart = data?.candidates?.[0]?.content?.parts?.find(
-    (part) => part.inlineData,
-  );
-
-  if (!imagePart?.inlineData?.data) {
+    if (response.status === 503) {
+      throw new Error("The Flux model is loading. Please wait a few seconds.");
+    }
     throw new Error(
-      "Image not generated. Please write the prompt more precisely or differently.",
+      `Error generating image: ${response.status} - ${errorText}`,
     );
   }
 
+  const blob = await response.blob();
+  const arrayBuffer = await blob.arrayBuffer();
+  const base64 = Buffer.from(arrayBuffer).toString("base64");
+
   return {
     success: true,
-    provider: "gemini-image",
-    model,
-    imageData: imagePart.inlineData.data,
-    mimeType: imagePart.inlineData.mimeType || "image/png",
-    text:
-      data?.candidates?.[0]?.content?.parts?.find((p) => p.text)?.text || "",
-    raw: data,
+    provider: "flux",
+    imageData: base64,
+    mimeType: "image/jpeg",
   };
 }

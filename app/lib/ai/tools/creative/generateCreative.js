@@ -1,4 +1,4 @@
-import { runGeminiImage } from "@/app/lib/ai/providers/flux";
+import { runFlux } from "@/app/lib/ai/providers/flux";
 
 const PROMPTS = {
   blog_cover:
@@ -26,7 +26,7 @@ ${campaign.target_audience || ""}
 ${PROMPTS[category]}
 `;
 
-  const result = await runGeminiImage({
+  const result = await runFlux({
     prompt,
   });
 
