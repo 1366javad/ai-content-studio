@@ -1,15 +1,12 @@
+const apiKey = process.env.GEMINI_API_KEY;
 export async function runFlux({ prompt, model = "gemini-3.1-flash-image" }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify({
         contents: [
           {
@@ -31,13 +28,13 @@ export async function runFlux({ prompt, model = "gemini-3.1-flash-image" }) {
 
   const data = await response.json();
 
+  const imageData =
+    data?.candidates?.[0]?.content?.parts?.find((p) => p.inlineData)?.inlineData
+      ?.data || null;
+
   return {
-    provider: "gemini-image",
-
     success: true,
-
-    imageData:
-      data?.candidates?.[0]?.content?.parts?.find((p) => p.inlineData)
-        ?.inlineData?.data || null,
+    provider: "gemini-image",
+    imageData,
   };
 }

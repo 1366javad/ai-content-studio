@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 
 import {
-  Image as image,
+  Image,
   Share2,
   Megaphone,
   Package,
@@ -67,21 +66,18 @@ export default function Creative({ creativeTypes = [] }) {
       setCustomLoading(true);
 
       try {
-        const response = await fetch(
-          `/api/campaigns/${campaign.id}/creative/generate`,
-          {
-            method: "POST",
+        const response = await fetch("/api/creative/generate", {
+          method: "POST",
 
-            headers: {
-              "Content-Type": "application/json",
-            },
-
-            body: JSON.stringify({
-              type: "custom",
-              prompt: customPrompt,
-            }),
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+
+          body: JSON.stringify({
+            type: "custom",
+            prompt: customPrompt,
+          }),
+        });
 
         const data = await response.json();
 
@@ -89,7 +85,7 @@ export default function Creative({ creativeTypes = [] }) {
           throw new Error(data.error);
         }
 
-        setCustomImage(data.imageUrl);
+        setCustomImage(`data:image/png;base64,${data.imageData}`);
       } finally {
         setCustomLoading(false);
       }
@@ -105,21 +101,18 @@ export default function Creative({ creativeTypes = [] }) {
     }));
 
     try {
-      const response = await fetch(
-        `/api/campaigns/${campaign.id}/creative/generate`,
-        {
-          method: "POST",
+      const response = await fetch("/api/creative/generate", {
+        method: "POST",
 
-          headers: {
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify({
-            type: sectionId,
-            prompt: section?.prompt || "",
-          }),
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+
+        body: JSON.stringify({
+          type: sectionId,
+          prompt: section?.prompt || "",
+        }),
+      });
 
       const data = await response.json();
 
@@ -129,7 +122,7 @@ export default function Creative({ creativeTypes = [] }) {
 
       setImages((prev) => ({
         ...prev,
-        [sectionId]: data.imageUrl,
+        [sectionId]: `data:image/png;base64,${data.imageData}`,
       }));
     } finally {
       setLoading((prev) => ({
@@ -197,6 +190,8 @@ export default function Creative({ creativeTypes = [] }) {
               text-white
               text-sm
               font-medium
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
           >
             {customLoading ? (
@@ -210,7 +205,7 @@ export default function Creative({ creativeTypes = [] }) {
 
         {customImage && (
           <div className="mt-4 relative group rounded-xl overflow-hidden inline-block">
-            <Image
+            <img
               src={customImage}
               alt="Custom generated"
               className="max-h-64 rounded-xl object-contain"
@@ -271,7 +266,7 @@ export default function Creative({ creativeTypes = [] }) {
                 </div>
               ) : image ? (
                 <div className="relative group rounded-xl overflow-hidden">
-                  <Image
+                  <img
                     src={image}
                     alt={section.label}
                     className="w-full h-40 object-cover rounded-xl"
